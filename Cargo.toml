@@ -1,0 +1,42 @@
+[package]
+name = "media-proxy"
+version = "0.1.0"
+edition = "2021"
+authors = ["Alula <alula@tuta.io>"]
+
+[package.metadata.release]
+release = false
+
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = true
+wasm-opt-args = ["-O4", "--enable-mutable-globals", "--dce"]
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+base64 = "0.22.1"
+console_error_panic_hook = { version = "0.1.1" }
+worker = { version = "0.4.2" }
+worker-macros = { version = "0.4.2" }
+dlmalloc = { version = "0.2.7", features = ["global"] }
+image = { git = "https://github.com/alula/image.git", rev = "675dadf6b4f22f0e694859cff17cc2d28b1939db", default-features = false, features = [
+    "png",
+    "jpeg",
+    "webp",
+    "ico",
+] }
+url = "2.5"
+libwebp-sys = { git = "https://github.com/alula/libwebp-sys-wasm.git", rev = "74c70365547dae4527dfb5e0c5583bbe3ee8bc60" }
+
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+panic = "abort"
+strip = true
+
+[profile.release.package."*"]
+opt-level = 3
+codegen-units = 1
+strip = true
